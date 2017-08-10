@@ -3,6 +3,7 @@
 #include "ModularMatrix.h"
 #include "Matrix.h"
 #include <iostream>
+#include <regex>
 #include <string>
 
 // Namespace
@@ -143,7 +144,18 @@ std::string AffineCipher::decodeInts(std::vector<int> inputInts, AffineCipher::C
 
 std::vector<int> AffineCipher::encodeString(std::string inputString, AffineCipher::CipherType cipher) {
 	
-	// Create an output vector
+	// Clean the string with a regular expression
+	// Depending on the cipher used, the regex will be different
+	if (cipher == MOD67_MIXEDCASE_CIPHER) {
+		std::regex mod67regex("[^A-Za-z0-9\\. \\!\\?\\,]");
+		inputString = regex_replace(inputString, mod67regex, "");
+	}
+	else {
+		std::regex mod29regex("[^A-Z \\.\\? ]");
+		inputString = regex_replace(inputString, mod29regex, "");
+	}
+
+	// Create an output vector of appropriate length
 	std::vector<int> outputVector(inputString.length());
 	
 	if (cipher == MOD29_UPPERCASE_CIPHER) {

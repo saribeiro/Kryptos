@@ -32,6 +32,12 @@ using namespace std;
 int main()
 {
 
+	std::string str = "This is a sample string with some invalid characters... 123##%^@#!";
+	std::vector<int> v = AffineCipher::encodeString(str, AffineCipher::MOD29_UPPERCASE_CIPHER);
+
+	cout << str << endl;
+	cout << AffineCipher::decodeInts(v, AffineCipher::MOD29_UPPERCASE_CIPHER) << endl;
+
 
 	return EXIT_SUCCESS;
 }

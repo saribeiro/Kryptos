@@ -80,21 +80,59 @@ std::string AffineCipher::decodeInts(std::vector<int> inputInts, AffineCipher::C
 	// Declare an empty output string
 	std::string outputString = "";
 
-	// Loop through the integer array
-	for (int i = 0; i < inputInts.size(); i++) {
-		switch (inputInts[i]) {
-			case 26:
-				outputString += " ";
-				break;
-			case 27:
-				outputString += ".";
-				break;
-			case 28:
-				outputString += "?";
-				break;
-			default:
-				outputString += (char)(inputInts[i] + (int)('A'));
+	if (cipher == MOD29_UPPERCASE_CIPHER) {
+		// Loop through the integer vector
+		for (int i = 0; i < inputInts.size(); i++) {
+			switch (inputInts[i]) {
+				case 26:
+					outputString += " ";
+					break;
+				case 27:
+					outputString += ".";
+					break;
+				case 28:
+					outputString += "?";
+					break;
+				default:
+					outputString += (char)(inputInts[i] + (int)('A'));
+			}
 		}
+	}
+	else {
+		// Loop through integer vector
+		for (int i = 0; i < inputInts.size(); i++) {
+			// Implement a switch to represent characters 62 through 66
+			switch (inputInts[i]) {
+				case 62:
+					outputString += " ";
+					break;
+				case 63:
+					outputString += ".";
+					break;
+				case 64:
+					outputString += "?";
+					break;
+				case 65:
+					outputString += "!";
+					break;
+				case 66:
+					outputString += ",";
+					break;
+			}
+
+			// Decisions for all other characters
+			if ((0 <= inputInts[i]) && (inputInts[i] <= 25)) {
+				outputString += (char)(inputInts[i] + (int)('A'));
+			}
+			else if ((26 <= inputInts[i]) && (inputInts[i] <= 51)) {
+				outputString += (char)(inputInts[i] - 26 + (int)('a'));
+			}
+			else if ((52 <= inputInts[i]) && (inputInts[i] <= 61)) {
+				outputString += (char)(inputInts[i] - 52 + (int)('0'));
+			}
+
+		}
+
 	}
 
 	// Return the output string
@@ -154,13 +192,13 @@ std::vector<int> AffineCipher::encodeString(std::string inputString, AffineCiphe
 			}
 
 			// If statement to check whether upper or lower case
-			if ( ((int)('A') <= (int)inputString[i]) && ((int)inputString[i] <= (int)('Z')) ) {
+			if (('A' <= inputString[i]) && (inputString[i] <= 'Z')) {
 				outputVector[i] = (int)inputString[i] - (int)('A');
 			}
-			else if (((int)('a') <= (int)inputString[i]) && ((int)inputString[i] <= (int)('z'))) {
-				outputVector[i] = (int)inputString[i] - (int)('a') + 25;
+			else if (('a' <= inputString[i]) && (inputString[i] <= 'z')) {
+				outputVector[i] = (int)inputString[i] - (int)('a') + 26;
 			}
-			else if (((int)('0') <= (int)inputString[i]) && ((int)inputString[i] <= (int)('9'))) {
+			else if (('0' <= inputString[i]) && (inputString[i] <= '9')) {
 				outputVector[i] = (int)inputString[i] - (int)('0') + 52;
 			}
 

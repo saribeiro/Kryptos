@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <ctime>
 #include <assert.h>
 
 // Diffusion and Inverse Diffusion matrices
@@ -32,6 +31,8 @@ using namespace std;
 
 int main()
 {
+
+
 	return EXIT_SUCCESS;
 }
 

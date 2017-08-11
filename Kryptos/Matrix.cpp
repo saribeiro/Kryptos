@@ -135,6 +135,31 @@ void Matrix::setMatrix(const int *arr_2d) {
 	}
 }
 
+void Matrix::setMatrix(int row, int column, std::vector<std::vector<int>> arr_2d)
+{
+	// Resize the matrix
+	this->matrix.resize(row, std::vector<int>(column));
+	this->matrix = arr_2d;
+
+	// Set the row and column sizes appropriately
+	this->matrix_rows = row;
+	this->matrix_columns = column;
+}
+
+void Matrix::setColumnVector(std::vector<int> arr)
+{
+	this->matrix.resize(arr.size(), std::vector<int>(1));
+	this->matrix_rows = arr.size();
+	this->matrix_columns = 1;
+}
+
+void Matrix::setRowVector(std::vector<int> arr)
+{
+	this->matrix.resize(1, std::vector<int>(arr.size()));
+	this->matrix_rows = 1;
+	this->matrix_columns = arr.size();
+}
+
 /* DISPLAY METHOD
  * This is the display method for the matrix.
  */

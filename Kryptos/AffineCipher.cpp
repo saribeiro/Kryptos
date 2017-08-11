@@ -16,8 +16,10 @@ using namespace std;
 
 AffineCipher::AffineCipher(int blockSize, std::string keyString)
 {
-	// Create empty matrices of blockSize x blockSize to hold diffusion matrices
+	// Set the block size to the class variable BLOCK_SIZE
 	this->BLOCK_SIZE = blockSize;
+
+	// Resize the matrices in the class
 	this->DiffusionM.setSize(BLOCK_SIZE, BLOCK_SIZE);
 	this->InverseDiffusionM.setSize(BLOCK_SIZE, BLOCK_SIZE);
 
@@ -43,8 +45,8 @@ std::string AffineCipher::encrypt(std::string plaintext) {
 		throw std::runtime_error("The key you entered contains invalid character for the cipher.");
 	}
 
-
-	// Create from the keystring
+	// Determine how many vectors are needed for keyString
+	int num_vectors = this->key.length()/BLOCK_SIZE;
 
 
 	return plaintext;
@@ -71,11 +73,19 @@ ModularMatrix AffineCipher::getInverseDiffusionMatrix()
 
 void AffineCipher::setDiffusionMatrix(ModularMatrix matrix)
 {
+	if (matrix.getModulus() != 67) {
+		throw std::runtime_error("The modulus of this matrix is not equal to 67!");
+	}
+
 	this->DiffusionM = matrix;
 }
 
 void AffineCipher::setInverseDiffusionMatrix(ModularMatrix matrix)
 {
+	if (matrix.getModulus() != 67) {
+		throw std::runtime_error("The modulus of this matrix is not equal to 67!");
+	}
+
 	this->InverseDiffusionM = matrix;
 }
 

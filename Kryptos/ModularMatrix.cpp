@@ -98,6 +98,9 @@ ModularMatrix ModularMatrix::operator-(const ModularMatrix &M) {
 		throw std::domain_error("The matrices you are subtracting have mismatched dimensions!");
 	};
 
+	// Assert that modulus is not 1 or 0
+	assert((this->modulus != 0) || (this->modulus != 1));
+
 	// Create a new Matrix to hold the output
 	ModularMatrix sumMatrix(this->matrix_rows, this->matrix_columns, M.modulus);
 
@@ -121,6 +124,9 @@ ModularMatrix ModularMatrix::operator*(const ModularMatrix &M) {
 	if (this->matrix_columns != M.matrix_rows) {
 		throw std::domain_error("The matrices you are trying to multiply have mismatched dimensions!");
 	};
+
+	// Assert that modulus is not 1 or 0
+	assert((this->modulus != 0) || (this->modulus != 1));
 
 	/* Short Description:
 	If A is a matrix of dimensions (m x n)

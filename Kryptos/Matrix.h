@@ -24,6 +24,9 @@ public:
 	void setSize(int row, int column);
 	void setMatrix(int *arr_2d);
 	void setMatrix(const int *arr_2d);
+	void setMatrix(int row, int column, std::vector<std::vector<int>> arr_2d);
+	void setColumnVector(std::vector<int> arr);
+	void setRowVector(std::vector<int> arr);
 
 	// Display Method
 	void displayMatrix();

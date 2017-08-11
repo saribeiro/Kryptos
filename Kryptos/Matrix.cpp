@@ -12,6 +12,11 @@ using namespace std;
  * the class "Matrix".
  */
 
+Matrix::Matrix() {
+	
+}
+
+
 Matrix::Matrix(int rows, int columns) {
 	// Define the rows and columns here
 	matrix_rows = rows;
@@ -94,6 +99,13 @@ int Matrix::getElement(int row, int column) {
 
 void Matrix::setElement(int row, int column, int value) {
 	matrix[row][column] = value;
+}
+
+void Matrix::setSize(int row, int column)
+{
+	this->matrix_rows = row;
+	this->matrix_columns = column;
+	matrix.resize(matrix_rows, std::vector<int>(matrix_columns));
 }
 
 void Matrix::setMatrix(int *arr_2d) {

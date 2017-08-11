@@ -11,6 +11,10 @@
  * These are the public constructors for the modular matrix class.
  */
 
+ModularMatrix::ModularMatrix()
+{
+}
+
 ModularMatrix::ModularMatrix(int rows, int columns, int modulus) : Matrix(rows, columns)
 {
 	this->matrix_rows = rows;
@@ -149,6 +153,11 @@ ModularMatrix ModularMatrix::operator*(const ModularMatrix &M) {
 
 int ModularMatrix::getModulus() {
 	return this->modulus;
+}
+
+void ModularMatrix::setModulus(int modulus)
+{
+	this->modulus = modulus;
 }
 
 

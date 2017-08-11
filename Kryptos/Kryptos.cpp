@@ -47,40 +47,6 @@ int main()
 	ModularMatrix M(10, 10, 67, *DIFFUSION_MATRIX);
 	ModularMatrix InverseM(10, 10, 67, *INVERSE_DIFFUSION_MATRIX);
 
-	// Key vectors and data vectors
-	ModularMatrix Key(10, 1, 67);
-	ModularMatrix Data(10, 1, 67);
-	ModularMatrix CipherVector(10, 1, 67);
-
-	std::string message = "10l3tter10";
-	std::string key = "0123456789";
-
-	cout << "Message: " << message << endl;
-	cout << "Key:     " << key << endl;
-
-	// Fill vectors with the data
-	std::vector<int> m_vector = AffineCipher::encodeString(message, AffineCipher::MOD67_MIXEDCASE_CIPHER);
-	std::vector<int> k_vector = AffineCipher::encodeString(key, AffineCipher::MOD67_MIXEDCASE_CIPHER);
-
-	// Populate modular matrix vectors with data
-	for (int i = 0; i < 10; i++) {
-		Key.setElement(i, 0, k_vector[i]);
-		Data.setElement(i, 0, m_vector[i]);
-	}
-
-	CipherVector = M * Data + Key;
-
-	// Convert cipher vector to output string
-	std::vector<int> c_vector(10);
-
-	for (int i = 0; i < 10; i++) {
-		c_vector[i] = CipherVector.getElement(i, 0);
-	}
-
-	// Print the result
-	cout << "Cipher:  " << AffineCipher::decodeInts(c_vector, AffineCipher::MOD67_MIXEDCASE_CIPHER) << endl;
-
-
 	return EXIT_SUCCESS;
 }
 

@@ -9,6 +9,7 @@ class Matrix
 // PUBLIC METHODS AND VARIABLES
 public:
 	// Constructor(s)
+	Matrix();
 	Matrix(int rows, int columns);
 	Matrix(int rows, int columns, int *arr_2d);
 	Matrix(int rows, int columns, const int *arr_2d);
@@ -20,6 +21,7 @@ public:
 	int getColumns();
 	int getElement(int row, int column);
 	void setElement(int row, int column, int value);
+	void setSize(int row, int column);
 	void setMatrix(int *arr_2d);
 	void setMatrix(const int *arr_2d);
 

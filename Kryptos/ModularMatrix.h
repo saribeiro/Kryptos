@@ -8,6 +8,7 @@ class ModularMatrix :
 // PUBLIC METHODS AND VARIABLES
 public:
 	// Constructor(s)
+	ModularMatrix();
 	ModularMatrix(int rows, int columns, int modulus);
 	ModularMatrix(int rows, int columns, int modulus, int *arr_2d);
 	ModularMatrix(int rows, int columns, int modulus, const int *arr_2d);
@@ -19,8 +20,9 @@ public:
 	ModularMatrix ModularMatrix::operator-(const ModularMatrix &M);
 	ModularMatrix ModularMatrix::operator*(const ModularMatrix &M);
 
-	// Getter Methods
+	// Getter/Setter Methods
 	int getModulus();
+	void setModulus(int modulus);
 
 	// Destructor(s)
 	~ModularMatrix();

@@ -25,8 +25,8 @@ AffineCipher::AffineCipher(ModularMatrix diffusionMatrix, ModularMatrix inverseD
 		throw std::domain_error("The modular matrices must have the same modulus! All arithmetic must occur in the ring Z/pZ!");
 	}
 	// Throw an error if moduli are not equal to 29
-	else if ((diffusionMatrix.getModulus() != 29) && (inverseDiffusionMatrix.getModulus() != 29)) {
-		throw std::domain_error("The class <AffineCipher> is undefined for modulus not equal to 29!");
+	else if ((diffusionMatrix.getModulus() != 29) || (diffusionMatrix.getModulus() != 67)) {
+		throw std::domain_error("The class <AffineCipher> is undefined for modulus not equal to 29 or 67!");
 	}
 
 }
@@ -42,8 +42,8 @@ AffineCipher::AffineCipher(ModularMatrix diffusionMatrix, ModularMatrix inverseD
 		throw std::domain_error("The modular matrices must have the same modulus! All arithmetic must occur in the ring Z/pZ!");
 	}
 	// Throw an error if moduli are not equal to 29
-	else if ((diffusionMatrix.getModulus() != 29) && (inverseDiffusionMatrix.getModulus() != 29)) {
-		throw std::domain_error("The class <AffineCipher> is undefined for modulus not equal to 29!");
+	else if ((diffusionMatrix.getModulus() != 29) || (diffusionMatrix.getModulus() != 67)) {
+		throw std::domain_error("The class <AffineCipher> is undefined for modulus not equal to 29 or 67!");
 	}
 }
 
@@ -54,8 +54,38 @@ AffineCipher::AffineCipher(ModularMatrix diffusionMatrix, ModularMatrix inverseD
 
 
 std::string AffineCipher::encrypt(std::string plaintext) {
-	// Until code is written, return empty string
-	return "";
+	
+	// Regex's for mod29 and mod67 ciphers
+	std::regex mod67regex("[^A-Za-z0-9\\. \\!\\?\\,]");
+	std::regex mod29regex("[^A-Z \\.\\? ]");
+
+	// Filter the plaintext based on regex
+	if (this->cipher == MOD67_MIXEDCASE_CIPHER) {
+		plaintext = regex_replace(plaintext, mod67regex, "");
+	}
+	else {
+		plaintext = regex_replace(plaintext, mod29regex, "");
+	}
+
+	// Throw an error if the key string contains invalid chars
+	// This will cause an issue with decryption
+
+	if (this->cipher == MOD67_MIXEDCASE_CIPHER) {
+		if (regex_match(this->key, mod67regex)) {
+			throw std::runtime_error("The key you entered contains invalid character for MOD67_MIXEDCASE_CIPHER.");
+		}
+	}
+	else {
+		if (regex_match(this->key, mod29regex)) {
+			throw std::runtime_error("The key you entered contains invalid character for MOD29_UPPERCASE_CIPHER.");
+		}
+	}
+
+
+	// Create from the keystring
+
+
+	return plaintext;
 }
 
 std::string AffineCipher::decrypt(std::string ciphertext) {

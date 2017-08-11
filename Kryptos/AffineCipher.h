@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include "ModularMatrix.h"
 
 // Use std namespace
 using namespace std;
@@ -44,11 +45,8 @@ public:
 
 // PROTECTED VARIABLES AND METHODS
 protected:
-	// Store the key as a string
 	std::string key;
-	// Store the cipher type in a variable
 	CipherType cipher;
-	
 
 
 };

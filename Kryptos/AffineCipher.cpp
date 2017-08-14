@@ -23,6 +23,17 @@ AffineCipher::AffineCipher(int blockSize, std::string keyString)
 	this->DiffusionM.setSize(BLOCK_SIZE, BLOCK_SIZE);
 	this->InverseDiffusionM.setSize(BLOCK_SIZE, BLOCK_SIZE);
 
+	// Set the keyString
+	this->key = keyString;
+
+	// Regex's for mod67 cipher
+	std::regex mod67regex("[^A-Za-z0-9\\. \\!\\?\\,]");
+
+	// Throw an error if the key string contains invalid chars
+	// This will cause an issue with decryption
+	if (regex_match(this->key, mod67regex)) {
+		throw std::runtime_error("The key you entered contains invalid character for the cipher.");
+	}
 }
 
 /* PUBLIC METHODS
@@ -39,17 +50,74 @@ std::string AffineCipher::encrypt(std::string plaintext) {
 	// Filter the plaintext based on regex
 	plaintext = regex_replace(plaintext, mod67regex, "");
 
-	// Throw an error if the key string contains invalid chars
-	// This will cause an issue with decryption
-	if (regex_match(this->key, mod67regex)) {
-		throw std::runtime_error("The key you entered contains invalid character for the cipher.");
+	// Determine how many vectors are needed for the message
+	int columnSize = (int)plaintext.length() / (int)BLOCK_SIZE + 1;
+	int rowSize = BLOCK_SIZE;
+
+	// Store these messages in a matrix rowSize x columnSize
+	ModularMatrix plaintextMatrix(rowSize, columnSize, 67);
+
+	// Parse the message string into a vector
+	// Define the padding values (in our case SPACE)
+	int paddingValue = AffineCipher::encodeString(" ")[0];
+	vector<int> plaintextVector = AffineCipher::encodeString(plaintext);
+
+	// Loop through the matrix by filling in the columns
+	for (int j = 0; j < columnSize; j++) {
+		for (int i = 0; i < rowSize; i++) {
+			// Set the element from the vector into the matrix
+			try {
+				plaintextMatrix.setElement(i, j, plaintextVector.at(i + j * rowSize));
+			}
+			// If the vector goes out of bounds, put a padding value in the matrix
+			catch (const std::out_of_range &exception) {
+				plaintextMatrix.setElement(i, j, paddingValue);
+			}
+		}
 	}
 
-	// Determine how many vectors are needed for keyString
-	int num_vectors = this->key.length()/BLOCK_SIZE;
+	// Parse the key string into a vector
+	// No padding value in the key case
+	vector<int> keyVector = AffineCipher::encodeString(this->key);
+	int keyVectorSize = keyVector.size();
 
+	// Create a matrix the size of the plaintextMatrix
+	ModularMatrix keyMatrix(rowSize, columnSize, 67);
 
-	return plaintext;
+	// Fill in the matrix values
+	// Loop through the matrix by filling in the columns
+	for (int j = 0; j < columnSize; j++) {
+		for (int i = 0; i < rowSize; i++) {
+			// Set the element from the vector into the matrix
+			keyMatrix.setElement(i, j, keyVector[(i + j * rowSize) % keyVectorSize]);
+		}
+	}
+
+	// Hold the output in a ciphermatrix
+	ModularMatrix ciphertextMatrix(rowSize, columnSize, 67);
+
+	// Encryption process
+	// Initialize ciphertextMatrix
+
+	// Repeat encryption process 5 times
+	ciphertextMatrix = plaintextMatrix;
+	for (int i = 0; i < 5; i++) {
+		ciphertextMatrix = this->DiffusionM * (ciphertextMatrix + keyMatrix);
+	}
+
+	// Create a vector to hold the output ciphertextMatrix
+	vector<int> ciphertextVector(rowSize * columnSize);
+
+	for (int j = 0; j < columnSize; j++) {
+		for (int i = 0; i < rowSize; i++) {
+			ciphertextVector[i + j * rowSize] = ciphertextMatrix.getElement(i, j);
+		}
+	}
+
+	// String with cipherText
+	std::string ciphertext = AffineCipher::decodeInts(ciphertextVector);
+
+	return ciphertext;
 }
 
 std::string AffineCipher::decrypt(std::string ciphertext) {

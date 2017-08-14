@@ -47,6 +47,13 @@ int main()
 	ModularMatrix M(10, 10, 67, *DIFFUSION_MATRIX);
 	ModularMatrix InverseM(10, 10, 67, *INVERSE_DIFFUSION_MATRIX);
 
+	AffineCipher a(10, "Th1s1s m0r3 s3cur3");
+	a.setDiffusionMatrix(M);
+	a.setInverseDiffusionMatrix(InverseM);
+	std::string s = "shortstr";
+	cout << "[" << a.encrypt(s) << "]" << endl;
+
+	
 
 
 	return EXIT_SUCCESS;

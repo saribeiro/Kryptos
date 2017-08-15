@@ -109,7 +109,7 @@ ModularMatrix ModularMatrix::operator-(const ModularMatrix &M) {
 
 	for (int i = 0; i < this->matrix_rows; i++) {
 		for (int j = 0; j < this->matrix_columns; j++) {
-			result = (this->matrix[i][j] - M.matrix[i][j]) % modulus;
+			result = ((this->matrix[i][j] - M.matrix[i][j]) % modulus + modulus) % modulus;
 			sumMatrix.setElement(i, j, result);
 		}
 	}

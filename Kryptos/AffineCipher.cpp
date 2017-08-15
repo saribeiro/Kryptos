@@ -101,7 +101,7 @@ std::string AffineCipher::encrypt(std::string plaintext) {
 
 	// Repeat encryption process 5 times
 	ciphertextMatrix = plaintextMatrix;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < this->DIFFUSION_ROUNDS; i++) {
 		ciphertextMatrix = this->DiffusionM * (ciphertextMatrix + keyMatrix);
 	}
 
@@ -121,8 +121,61 @@ std::string AffineCipher::encrypt(std::string plaintext) {
 }
 
 std::string AffineCipher::decrypt(std::string ciphertext) {
-	// Until code is written, return empty string
-	return "";
+	// Load the ciphertext into a matrix
+	// Break it down into an appropriate sized matrix
+
+	// Assert ciphertext has to be multiple of BLOCK_SIZE
+	assert(ciphertext.length() % BLOCK_SIZE == 0);
+
+	// Calculate row and column size of matrix
+	int columnSize = (int)ciphertext.length() / (int)BLOCK_SIZE;
+	int rowSize = BLOCK_SIZE;
+
+	// Generate Modular matrix and vector of ciphertext
+	vector<int> ciphertextVector = AffineCipher::encodeString(ciphertext);
+	ModularMatrix ciphertextMatrix(rowSize, columnSize, 67);
+
+	// Loop through matrix to fill in values from vector
+	for (int j = 0; j < columnSize; j++) {
+		for (int i = 0; i < rowSize; i++) {
+			ciphertextMatrix.setElement(i, j, ciphertextVector[i + j * rowSize]);
+		}
+	}
+
+	// Once this matrix is filled, make a keyMatrix
+	vector<int> keyVector = AffineCipher::encodeString(this->key);
+	int keyVectorSize = keyVector.size();
+	ModularMatrix keyMatrix(rowSize, columnSize, 67);
+
+	// Fill the keyMatrix
+	for (int j = 0; j < columnSize; j++) {
+		for (int i = 0; i < rowSize; i++) {
+			keyMatrix.setElement(i, j, keyVector[(i + j * rowSize) % keyVectorSize]);
+		}
+	}
+
+	// Perform the decryption operation
+	// Declare the plaintextMatrix
+
+	ModularMatrix plaintextMatrix(rowSize, columnSize, 67);
+	plaintextMatrix = ciphertextMatrix;
+
+	for (int i = 0; i < this->DIFFUSION_ROUNDS; i++) {
+		plaintextMatrix = (this->InverseDiffusionM * plaintextMatrix) - keyMatrix;
+	}
+
+	// Parse the resulting plaintextMatrix into a vector
+	vector<int> plaintextVector(rowSize * columnSize);
+
+	for (int j = 0; j < columnSize; j++) {
+		for (int i = 0; i < rowSize; i++) {
+			plaintextVector[i + j * rowSize] = plaintextMatrix.getElement(i, j);
+		}
+	}
+
+	// Parse the vector into a string
+	std::string plaintext = AffineCipher::decodeInts(plaintextVector);
+	return plaintext;
 }
 
 /* GETTER AND SETTER METHODS
@@ -139,10 +192,18 @@ ModularMatrix AffineCipher::getInverseDiffusionMatrix()
 	return this->InverseDiffusionM;
 }
 
+int AffineCipher::getBlockSize()
+{
+	return BLOCK_SIZE;
+}
+
 void AffineCipher::setDiffusionMatrix(ModularMatrix matrix)
 {
 	if (matrix.getModulus() != 67) {
 		throw std::runtime_error("The modulus of this matrix is not equal to 67!");
+	}
+	else if ((matrix.getRows() != this->BLOCK_SIZE) || (matrix.getColumns() != this->BLOCK_SIZE)) {
+		throw std::runtime_error("The matrix dimensions must match the block size of the cipher!");
 	}
 
 	this->DiffusionM = matrix;
@@ -152,6 +213,9 @@ void AffineCipher::setInverseDiffusionMatrix(ModularMatrix matrix)
 {
 	if (matrix.getModulus() != 67) {
 		throw std::runtime_error("The modulus of this matrix is not equal to 67!");
+	}
+	else if ((matrix.getRows() != this->BLOCK_SIZE) || (matrix.getColumns() != this->BLOCK_SIZE)) {
+		throw std::runtime_error("The matrix dimensions must match the block size of the cipher!");
 	}
 
 	this->InverseDiffusionM = matrix;

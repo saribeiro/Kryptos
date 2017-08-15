@@ -29,6 +29,7 @@ public:
 	// Getter/Setter methods
 	ModularMatrix getDiffusionMatrix();
 	ModularMatrix getInverseDiffusionMatrix();
+	int getBlockSize();
 	void setDiffusionMatrix(ModularMatrix matrix);
 	void setInverseDiffusionMatrix(ModularMatrix matrix);
 
@@ -44,6 +45,7 @@ protected:
 	// Key string
 	std::string key;
 	int BLOCK_SIZE;
+	int DIFFUSION_ROUNDS = 5;
 
 	// Diffusion matrices
 	ModularMatrix DiffusionM;

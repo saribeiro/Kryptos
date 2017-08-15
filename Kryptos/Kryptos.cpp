@@ -47,14 +47,19 @@ int main()
 	ModularMatrix M(10, 10, 67, *DIFFUSION_MATRIX);
 	ModularMatrix InverseM(10, 10, 67, *INVERSE_DIFFUSION_MATRIX);
 
-	AffineCipher a(10, "Th1s1s m0r3 s3cur3");
+	// Load the cipher properties
+	AffineCipher a(10, "variable key length");
 	a.setDiffusionMatrix(M);
 	a.setInverseDiffusionMatrix(InverseM);
-	std::string s = "shortstr";
-	cout << "[" << a.encrypt(s) << "]" << endl;
 
-	
+	// Define the output
+	std::string s = "This is the message to encrypt. As you can see, it works just fine.";
+	std::string c = a.encrypt(s);
+	std::string d = a.decrypt(c);
+	cout << "[" << c << "]" << endl;
+	cout << "[" << d << "]" << endl;
 
+	(M * InverseM).displayMatrix();
 
 	return EXIT_SUCCESS;
 }

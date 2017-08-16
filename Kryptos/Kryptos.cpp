@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <ctime>
 #include <assert.h>
 
 // Diffusion and Inverse Diffusion matrices
@@ -37,6 +38,7 @@ const int INVERSE_DIFFUSION_MATRIX[10][10] = {
 #include "Matrix.h"
 #include "ModularMatrix.h"
 #include "AffineCipher.h"
+#include "VigenereCipher.h"
 
 // Use the standard namespace
 using namespace std;
@@ -47,19 +49,14 @@ int main()
 	ModularMatrix M(10, 10, 67, *DIFFUSION_MATRIX);
 	ModularMatrix InverseM(10, 10, 67, *INVERSE_DIFFUSION_MATRIX);
 
-	// Load the cipher properties
-	AffineCipher a(10, "variable key length");
-	a.setDiffusionMatrix(M);
-	a.setInverseDiffusionMatrix(InverseM);
+	std::string message = "Anyone who has never made a mistake has never tried anything new	-- Albert Einstein";
+	std::string key = "can't guess this";
 
-	// Define the output
-	std::string s = "This is the message to encrypt. As you can see, it works just fine.";
-	std::string c = a.encrypt(s);
-	std::string d = a.decrypt(c);
-	cout << "[" << c << "]" << endl;
-	cout << "[" << d << "]" << endl;
-
-	(M * InverseM).displayMatrix();
+	// Vigenere Encrypt
+	std::string ciphertext = VigenereCipher::encrypt(message, key);
+	std::string decrypted = VigenereCipher::decrypt(ciphertext, key);
+	cout << "Encrypted Output : [" << ciphertext << "]" << endl;
+	cout << "Decrypted Output : [" << decrypted << "]" << endl;
 
 	return EXIT_SUCCESS;
 }
